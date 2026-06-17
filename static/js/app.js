@@ -17,6 +17,7 @@ let selectedTextContext = {
 const elements = {
     refreshBtn: document.getElementById('refresh-btn'),
     refreshIcon: document.querySelector('#refresh-btn .sync-icon'),
+    exportCsvBtn: document.getElementById('export-csv-btn'),
     searchInput: document.getElementById('search-input'),
     filtersContainer: document.getElementById('filters-container'),
     releasesGrid: document.getElementById('releases-grid'),
@@ -305,6 +306,59 @@ function copyToClipboard(text, successMessage) {
     }
 }
 
+function exportToCSV() {
+    const dataToExport = filteredReleases.length ? filteredReleases : releases;
+    
+    if (!dataToExport.length) {
+        showToast("No data available to export.");
+        return;
+    }
+    
+    // CSV Header row
+    const headers = ["Date", "Update Type", "Description", "Documentation Link"];
+    
+    // Convert rows
+    const rows = dataToExport.map(item => {
+        return [
+            item.date,
+            item.type,
+            item.description_text,
+            item.link
+        ].map(value => {
+            // Escape double quotes by doubling them and wrapping the value in double quotes
+            const escaped = String(value).replace(/"/g, '""');
+            return `"${escaped}"`;
+        }).join(',');
+    });
+    
+    const csvContent = [headers.join(','), ...rows].join('\r\n');
+    
+    try {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        // Formulate a nice filename with the current category type and search query if any
+        let filename = "bigquery_release_notes";
+        if (currentTypeFilter !== 'all') {
+            filename += `_${currentTypeFilter}`;
+        }
+        filename += ".csv";
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast(`Exported ${dataToExport.length} updates to CSV!`);
+    } catch (err) {
+        console.error("CSV Export Error:", err);
+        showToast("Failed to export CSV file.");
+    }
+}
+
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -470,6 +524,11 @@ function setupEventListeners() {
     // 1. Sync / Refresh Feed Click
     elements.refreshBtn.addEventListener('click', () => {
         fetchReleases(true);
+    });
+    
+    // Export to CSV Click
+    elements.exportCsvBtn.addEventListener('click', () => {
+        exportToCSV();
     });
     
     // 2. Retry Fetch Button Click (from Error screen)
