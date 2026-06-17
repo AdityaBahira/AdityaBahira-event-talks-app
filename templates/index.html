@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Explorer</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS Link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="shortcut icon" href="https://www.gstatic.com/images/branding/product/1x/bigquery_64dp.png" type="image/png">
+</head>
+<body>
+    <!-- Background Blurry Orbs for Premium Dark Mode -->
+    <div class="bg-glow-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Main Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo-wrapper">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/bigquery_64dp.png" alt="BigQuery Logo" class="bq-logo">
+                </div>
+                <div class="title-wrapper">
+                    <h1>BigQuery Release <span class="gradient-text">Explorer</span></h1>
+                    <div class="feed-status">
+                        <span class="pulse-dot"></span>
+                        <span class="status-label">Live Google Cloud Feed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="refresh-btn" class="btn btn-primary" title="Sync latest notes from Google Cloud">
+                    <svg class="icon sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                    <span>Sync Feed</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Informational Tips -->
+        <div class="info-alert">
+            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span><strong>Pro-Tip:</strong> Select any text inside an update card to reveal a quick <strong>"Tweet Highlight"</strong> button!</span>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper feat-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stat-icon">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2 12 2"/>
+                        <polyline points="2 17 12 22 22 17"/>
+                        <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-total">-</span>
+                    <span class="stat-label">Total Updates</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper success-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stat-icon">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-features">-</span>
+                    <span class="stat-label">New Features</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper info-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stat-icon">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-announcements">-</span>
+                    <span class="stat-label">Announcements</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper warn-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stat-icon">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-issues">-</span>
+                    <span class="stat-label">Issues & Fixes</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls (Search & Filter) -->
+        <section class="controls-panel">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="search-input" placeholder="Search release contents, date, type...">
+            </div>
+            
+            <div class="filters-scroll">
+                <div class="filters-pills" id="filters-container">
+                    <button class="pill-btn active" data-type="all">All Updates</button>
+                    <button class="pill-btn" data-type="feature">Features</button>
+                    <button class="pill-btn" data-type="announcement">Announcements</button>
+                    <button class="pill-btn" data-type="fix">Fixes</button>
+                    <button class="pill-btn" data-type="issue">Issues</button>
+                    <button class="pill-btn" data-type="deprecated">Deprecated/Change</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Releases Grid -->
+        <main class="releases-main">
+            <!-- Loading Spinner View -->
+            <div id="loading-view" class="center-state">
+                <div class="spinner-container">
+                    <div class="premium-spinner"></div>
+                    <p>Fetching BigQuery updates...</p>
+                </div>
+            </div>
+
+            <!-- Error State View -->
+            <div id="error-view" class="center-state hidden">
+                <div class="error-container">
+                    <div class="error-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="error-icon">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h2>Unable to load feed</h2>
+                    <p id="error-msg">Check your network connection and try again.</p>
+                    <button id="retry-btn" class="btn btn-secondary">
+                        Retry Fetch
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty State View -->
+            <div id="empty-view" class="center-state hidden">
+                <div class="empty-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    <h3>No matching updates found</h3>
+                    <p>Try adjusting your search criteria or filter category.</p>
+                </div>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="releases-grid" class="releases-grid hidden">
+                <!-- Javascript will insert cards dynamically here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Twitter Composer Modal -->
+    <div id="tweet-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title-area">
+                    <svg class="x-logo-svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    <h3>Draft your Tweet</h3>
+                </div>
+                <button id="modal-close" class="modal-close-btn" title="Close Composer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="draft-metadata">
+                    <span class="meta-label">Source Update Type:</span>
+                    <span class="meta-badge" id="modal-update-type">Feature</span>
+                </div>
+                
+                <div class="composer-container">
+                    <textarea id="tweet-textarea" placeholder="What's happening?" maxlength="1000"></textarea>
+                    
+                    <div class="composer-utils">
+                        <div class="char-counter-group">
+                            <!-- Circular SVG progress indicator -->
+                            <svg class="circular-progress" viewBox="0 0 36 36">
+                                <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <path class="progress" id="progress-indicator" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            </svg>
+                            <span id="char-count">0 / 280</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-alert hidden" id="modal-char-warning">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="warning-icon">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>Your draft exceeds the Twitter 280-character limit. We recommend shortening it!</span>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="btn-copy-draft" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    </svg>
+                    <span>Copy Text</span>
+                </button>
+                <button id="btn-post-tweet" class="btn btn-tweet">
+                    <svg class="btn-icon fill-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    <span>Post to X</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Highlight Tweet Popover Button -->
+    <button id="floating-tweet-btn" class="floating-tweet-btn hidden" title="Tweet highlighted selection">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        <span>Tweet Selection</span>
+    </button>
+
+    <!-- Toast Notification Wrapper -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- App JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
