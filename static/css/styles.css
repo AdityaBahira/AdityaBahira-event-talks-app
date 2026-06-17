@@ -823,7 +823,7 @@ body.light-theme .btn-theme:hover {
 .card-body {
     padding: 1.25rem;
     font-size: 0.95rem;
-    color: #d1d5db;
+    color: var(--text-main);
     flex-grow: 1;
 }
 
@@ -860,7 +860,7 @@ body.light-theme .btn-theme:hover {
 .card-body code {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
+    color: inherit;
     font-family: monospace;
     font-size: 0.85rem;
     padding: 0.15rem 0.35rem;
