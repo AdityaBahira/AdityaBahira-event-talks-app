@@ -38,6 +38,93 @@
 }
 
 /* --------------------------------------------------
+   LIGHT THEME OVERRIDES
+-------------------------------------------------- */
+body.light-theme {
+    --bg-dark: #f8fafc;
+    --bg-surface: rgba(255, 255, 255, 0.75);
+    --bg-surface-hover: rgba(255, 255, 255, 0.95);
+    --bg-input: rgba(255, 255, 255, 0.9);
+    
+    --border-color: rgba(15, 23, 42, 0.08);
+    --border-hover: rgba(15, 23, 42, 0.15);
+    --border-focus: rgba(66, 133, 244, 0.6);
+    
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+    
+    --color-primary: #1a73e8;
+    --color-primary-hover: #1557b0;
+    --color-primary-glow: rgba(26, 115, 232, 0.1);
+    
+    --color-feature-glow: rgba(16, 185, 129, 0.08);
+    --color-announcement-glow: rgba(245, 158, 11, 0.08);
+    --color-fix-glow: rgba(59, 130, 246, 0.08);
+    --color-issue-glow: rgba(244, 63, 94, 0.08);
+    --color-deprecated-glow: rgba(168, 85, 247, 0.08);
+    --color-update-glow: rgba(6, 182, 212, 0.08);
+}
+
+body.light-theme .orb {
+    opacity: 0.15;
+}
+
+body.light-theme .release-card:hover {
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+body.light-theme .stat-card {
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.02);
+}
+
+body.light-theme .card-body code {
+    background: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+}
+
+body.light-theme .modal-box {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.1);
+    color: #0f172a;
+}
+
+body.light-theme .modal-header,
+body.light-theme .modal-footer {
+    border-color: rgba(15, 23, 42, 0.08);
+    background: rgba(15, 23, 42, 0.02);
+}
+
+body.light-theme .composer-container {
+    background: rgba(15, 23, 42, 0.02);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.light-theme .composer-container textarea {
+    color: #0f172a;
+}
+
+body.light-theme .modal-close-btn {
+    color: #475569;
+}
+
+body.light-theme .modal-close-btn:hover {
+    background: rgba(15, 23, 42, 0.04);
+}
+
+body.light-theme .modal-overlay {
+    background: rgba(15, 23, 42, 0.4);
+}
+
+body.light-theme .toast {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.1);
+    color: #0f172a;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
+}
+
+/* --------------------------------------------------
    GLOBAL STYLES & RESET
 -------------------------------------------------- */
 * {
@@ -323,6 +410,38 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
+}
+
+.btn-theme {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    outline: none;
+}
+
+.btn-theme:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
+    border-color: var(--border-hover);
+    transform: scale(1.05);
+}
+
+body.light-theme .btn-theme {
+    background: rgba(15, 23, 42, 0.04);
+    color: #475569;
+}
+
+body.light-theme .btn-theme:hover {
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
 }
 
 .icon {

@@ -18,6 +18,9 @@ const elements = {
     refreshBtn: document.getElementById('refresh-btn'),
     refreshIcon: document.querySelector('#refresh-btn .sync-icon'),
     exportCsvBtn: document.getElementById('export-csv-btn'),
+    themeToggle: document.getElementById('theme-toggle'),
+    sunIcon: document.querySelector('#theme-toggle .sun-icon'),
+    moonIcon: document.querySelector('#theme-toggle .moon-icon'),
     searchInput: document.getElementById('search-input'),
     filtersContainer: document.getElementById('filters-container'),
     releasesGrid: document.getElementById('releases-grid'),
@@ -617,12 +620,47 @@ function setupEventListeners() {
         elements.floatingTweetBtn.classList.add('hidden');
         window.getSelection().removeAllRanges(); // clear highlight selection
     });
+    
+    // 10. Theme Toggler Click
+    elements.themeToggle.addEventListener('click', toggleTheme);
+}
+
+// --------------------------------------------------
+// THEME MANAGEMENT (LIGHT/DARK)
+// --------------------------------------------------
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        elements.sunIcon.classList.remove('hidden');
+        elements.moonIcon.classList.add('hidden');
+    } else {
+        document.body.classList.remove('light-theme');
+        elements.sunIcon.classList.add('hidden');
+        elements.moonIcon.classList.remove('hidden');
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    
+    if (isLight) {
+        elements.sunIcon.classList.remove('hidden');
+        elements.moonIcon.classList.add('hidden');
+        showToast("Switched to Light Mode!");
+    } else {
+        elements.sunIcon.classList.add('hidden');
+        elements.moonIcon.classList.remove('hidden');
+        showToast("Switched to Dark Mode!");
+    }
 }
 
 // --------------------------------------------------
 // APP INIT
 // --------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     setupEventListeners();
     fetchReleases(false); // First load feeds (serve from cache)
 });
